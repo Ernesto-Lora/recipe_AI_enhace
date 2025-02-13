@@ -90,7 +90,7 @@ class Tag(models.Model):
 class Ingredient(models.Model):
     """Ingredient for recipes with portion sizes."""
     name = models.CharField(max_length=255)
-    amount = models.DecimalField(max_digits=6, decimal_places=2)  # Example: 30.00
+    amount = models.DecimalField(max_digits=6, decimal_places=2, default=0)  # Example: 30.00
     unit = models.CharField(
         max_length=50,
         choices=[

@@ -18,7 +18,8 @@ from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
-from core.utils import enhance_recipe_text
+from core.utils import generate_meal_plan, generate_meal_plan_testing
+import json
 
 from core.models import (
     Recipe,
@@ -97,38 +98,50 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    @action(methods=['POST'], detail=False, url_path='enhance-recipe')
-    def enhance_recipe(self, request):
-        """Receive a recipe, enhance it using OpenAI, and create a new one."""
-        serializer = RecipeSerializer(data=request.data)
+    @action(methods=['POST'], detail=False, url_path='generate-meal-plan')
+    def generate_meal_plan_view(self, request):
+        """Generate multiple recipes to fit a caloric requirement."""
+        calories_per_day = request.data.get('calories', 1800)
+        num_meals = request.data.get('meals', 3)
 
-        if serializer.is_valid():
-            validated_data = serializer.validated_data
-            enhanced_description = enhance_recipe_text(validated_data.get('description', ''))
+        meal_data = generate_meal_plan(calories_per_day, num_meals)
+        print(f"Parsed meal_data: {meal_data}")
+        print(f"Type of meal_data: {type(meal_data)}")
 
-            # Create the new recipe
+
+        if meal_data is None:
+            return Response({"error": "Invalid JSON response from OpenAI"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        if not isinstance(meal_data, list):
+            return Response({"error": "Expected a list of meals"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        created_recipes = []
+        for meal in meal_data:
+            if not all(k in meal for k in ["title", "description", "ingredients", "calories"]):
+                return Response({"error": "Missing keys in OpenAI response"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
             recipe = Recipe.objects.create(
                 user=request.user,
-                title=validated_data.get('title', 'Enhanced Recipe'),
-                description=enhanced_description,
-                time_minutes=validated_data.get('time_minutes', 10),
-                price=validated_data.get('price', 0),
-                link=validated_data.get('link', ''),
+                title=meal['title'],
+                description=meal['description'],
+                time_minutes=meal.get('time_minutes', 10),
+                price=meal.get('price', 0),
+                link=meal.get('link', ''),
             )
 
-            # Add tags and ingredients if provided
-            # tags = validated_data.get('tags', [])
-            # ingredients = validated_data.get('ingredients', [])
-            # recipe.tags.set(tags)
-            # recipe.ingredients.set(ingredients)
+            # Add ingredients
+            ingredients = []
+            for ing in meal['ingredients']:
+                ingredient_obj, _ = Ingredient.objects.get_or_create(
+                    name=ing['name'], 
+                    user=request.user
+                )
+                ingredients.append(ingredient_obj)
 
-            return Response(
-                RecipeSerializer(recipe).data,
-                status=status.HTTP_201_CREATED
-            )
+            recipe.ingredients.set(ingredients)
+            created_recipes.append(RecipeSerializer(recipe).data)
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+        return Response(created_recipes, status=status.HTTP_201_CREATED)
 
 @extend_schema_view(
     list=extend_schema(
