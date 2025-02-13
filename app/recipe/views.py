@@ -27,7 +27,7 @@ from core.models import (
     Ingredient,
 )
 from recipe import serializers
-from recipe.serializers import RecipeSerializer
+#from recipe.serializers import RecipeSerializer
 
 
 @extend_schema_view(
@@ -104,7 +104,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         calories_per_day = request.data.get('calories', 1800)
         num_meals = request.data.get('meals', 3)
 
-        meal_data = generate_meal_plan(calories_per_day, num_meals)
+        meal_data = generate_meal_plan_testing(calories_per_day, num_meals)
         print(f"Parsed meal_data: {meal_data}")
         print(f"Type of meal_data: {type(meal_data)}")
 
@@ -117,31 +117,48 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
         created_recipes = []
         for meal in meal_data:
-            if not all(k in meal for k in ["title", "description", "ingredients", "calories"]):
-                return Response({"error": "Missing keys in OpenAI response"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            meal['user'] = request.user.id  # Ensure user is included
 
-            recipe = Recipe.objects.create(
-                user=request.user,
-                title=meal['title'],
-                description=meal['description'],
-                time_minutes=meal.get('time_minutes', 10),
-                price=meal.get('price', 0),
-                link=meal.get('link', ''),
-            )
-
-            # Add ingredients
-            ingredients = []
-            for ing in meal['ingredients']:
-                ingredient_obj, _ = Ingredient.objects.get_or_create(
-                    name=ing['name'], 
-                    user=request.user
-                )
-                ingredients.append(ingredient_obj)
-
-            recipe.ingredients.set(ingredients)
-            created_recipes.append(RecipeSerializer(recipe).data)
+            serializer = serializers.RecipeSerializer(data=meal, context={'request': request})
+            
+            if serializer.is_valid():
+                recipe = serializer.save()
+                created_recipes.append(serializers.RecipeSerializer(recipe).data)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         return Response(created_recipes, status=status.HTTP_201_CREATED)
+
+
+
+        #     if not all(k in meal for k in ["title", "description", "ingredients", "calories"]):
+        #         return Response({"error": "Missing keys in OpenAI response"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        #     recipe = Recipe.objects.create(
+        #         user=request.user,
+        #         title=meal['title'],
+        #         description=meal['description'],
+        #         time_minutes=meal.get('time_minutes', 10),
+        #         price=meal.get('price', 0),
+        #         link=meal.get('link', ''),
+        #     )
+
+        #     # Add ingredients
+        #     ingredients = []
+        #     for ing in meal['ingredients']:
+        #         ingredient_obj, _ = Ingredient.objects.get_or_create(
+        #             name=ing['name'], 
+        #             user=request.user
+        #         )
+        #         ingredients.append(ingredient_obj)
+
+        #     recipe.ingredients.set(ingredients)
+
+        #     recipe = serializers.RecipeSerializer(**meal)
+
+        #     created_recipes.append(serializers.RecipeSerializer(recipe).data)
+
+        # return Response(created_recipes, status=status.HTTP_201_CREATED)
 
 @extend_schema_view(
     list=extend_schema(

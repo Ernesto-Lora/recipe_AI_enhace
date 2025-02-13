@@ -15,7 +15,7 @@ class IngredientSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ingredient
-        fields = ['id', 'name']
+        fields = ['id', 'name', 'amount', 'unit']
         read_only_fields = ['id']
 
 
@@ -36,8 +36,8 @@ class RecipeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
         fields = [
-            'id', 'title', 'time_minutes', 'price', 'link', 'tags',
-            'ingredients', 'description'
+            'id', 'title', 'tags',
+            'ingredients', 'description', 'calories'
         ]
         read_only_fields = ['id']
 
@@ -54,6 +54,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     def _get_or_create_ingredients(self, ingredients, recipe):
         """Handle getting or creating ingredients as needed."""
         auth_user = self.context['request'].user
+        print(auth_user)
         for ingredient in ingredients:
             ingredient_obj, created = Ingredient.objects.get_or_create(
                 user=auth_user,
@@ -63,9 +64,14 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         """Create a recipe."""
+        print(self.context['request'].user)
         tags = validated_data.pop('tags', [])
+        print(tags)
         ingredients = validated_data.pop('ingredients', [])
-        recipe = Recipe.objects.create(**validated_data)
+        print(ingredients)
+        # Ensure user is set
+        user = self.context['request'].user 
+        recipe = Recipe.objects.create(user=user, **validated_data)
         self._get_or_create_tags(tags, recipe)
         self._get_or_create_ingredients(ingredients, recipe)
 

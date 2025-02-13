@@ -6,9 +6,9 @@ mock_openai_response = [
         "title": "Breakfast",
         "description": "A healthy and filling breakfast to start your day right.",
         "ingredients": [
-            {"name": "Whole grain bread", "amount": 2, "unit": "slices"},
-            {"name": "Avocado", "amount": 0.5, "unit": "whole"},
-            {"name": "Egg", "amount": 2, "unit": "whole"},
+            {"name": "Whole grain bread", "amount": 2, "unit": "g"},
+            {"name": "Avocado", "amount": 0.5, "unit": "g"},
+            {"name": "Egg", "amount": 2, "unit": "g"},
             {"name": "Orange juice", "amount": 200, "unit": "ml"}
         ],
         "calories": 600
@@ -20,7 +20,7 @@ mock_openai_response = [
             {"name": "Grilled chicken breast", "amount": 150, "unit": "g"},
             {"name": "Quinoa", "amount": 100, "unit": "g"},
             {"name": "Steamed broccoli", "amount": 100, "unit": "g"},
-            {"name": "Salad with vinaigrette", "amount": 1, "unit": "bowl"}
+            {"name": "Salad with vinaigrette", "amount": 1, "unit": "g"}
         ],
         "calories": 600
     },
