@@ -6,10 +6,10 @@ mock_openai_response = [
         "title": "Breakfast",
         "description": "A healthy and filling breakfast to start your day right.",
         "ingredients": [
-            {"name": "Whole grain bread", "amount": 2, "unit": "g"},
-            {"name": "Avocado", "amount": 0.5, "unit": "g"},
-            {"name": "Egg", "amount": 2, "unit": "g"},
-            {"name": "Orange juice", "amount": 200, "unit": "ml"}
+            {"name": "Whole grain bread", "amount": 2, "unit": "piece"},  # Bread is typically counted in pieces
+            {"name": "Avocado", "amount": 0.5, "unit": "piece"},  # Avocado is typically counted in pieces
+            {"name": "Egg", "amount": 2, "unit": "piece"},  # Eggs are counted in pieces
+            {"name": "Orange juice", "amount": 200, "unit": "ml"}  # Correct unit for liquids
         ],
         "calories": 600
     },
@@ -17,10 +17,10 @@ mock_openai_response = [
         "title": "Lunch",
         "description": "A balanced lunch to keep you energized throughout the day.",
         "ingredients": [
-            {"name": "Grilled chicken breast", "amount": 150, "unit": "g"},
-            {"name": "Quinoa", "amount": 100, "unit": "g"},
-            {"name": "Steamed broccoli", "amount": 100, "unit": "g"},
-            {"name": "Salad with vinaigrette", "amount": 1, "unit": "g"}
+            {"name": "Grilled chicken breast", "amount": 150, "unit": "g"},  # Correct unit for meat
+            {"name": "Quinoa", "amount": 100, "unit": "g"},  # Correct unit for grains
+            {"name": "Steamed broccoli", "amount": 100, "unit": "g"},  # Correct unit for vegetables
+            {"name": "Salad with vinaigrette", "amount": 1, "unit": "cup"}  # Salad is typically measured in cups
         ],
         "calories": 600
     },
@@ -28,10 +28,10 @@ mock_openai_response = [
         "title": "Dinner",
         "description": "A wholesome dinner to end the day.",
         "ingredients": [
-            {"name": "Baked salmon", "amount": 150, "unit": "g"},
-            {"name": "Sweet potato", "amount": 150, "unit": "g"},
-            {"name": "Steamed asparagus", "amount": 100, "unit": "g"},
-            {"name": "Glass of red wine", "amount": 150, "unit": "ml"}
+            {"name": "Baked salmon", "amount": 150, "unit": "g"},  # Correct unit for fish
+            {"name": "Sweet potato", "amount": 150, "unit": "g"},  # Correct unit for root vegetables
+            {"name": "Steamed asparagus", "amount": 100, "unit": "g"},  # Correct unit for vegetables
+            {"name": "Glass of red wine", "amount": 150, "unit": "ml"}  # Correct unit for liquids
         ],
         "calories": 600
     }

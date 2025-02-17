@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signIn } from '../services/auth'; // Import the signIn API function
-import { setToken } from '../utils/auth'; // Import the token utility
+import { signUp } from '../services/auth'; // Rename the function to signUp
+import { setToken } from '../utils/auth'; // Utility to store JWT token
 
-const SignIn = () => {
-  const [username, setUsername] = useState('');
+const SignUp = () => {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -14,23 +14,20 @@ const SignIn = () => {
     e.preventDefault();
 
     // Validate inputs
-    if (!username || !email || !password) {
+    if (!name || !email || !password) {
       setError('Please fill in all fields.');
       return;
     }
 
     try {
-      // Call the signIn API function
-      const token = await signIn(username, email, password);
+      // Call the signUp API function
+      await signUp(name, email, password);
 
-      // Save the token to localStorage
-      setToken(token);
-
-      // Redirect to the login page or main app
-      navigate('/login'); // Or navigate('/app') if you want to redirect directly to the app
+      // Redirect to login page
+      navigate('/login');
     } catch (err) {
       setError('Registration failed. Please try again.');
-      console.error('SignIn error:', err);
+      console.error('SignUp error:', err);
     }
   };
 
@@ -40,11 +37,11 @@ const SignIn = () => {
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <form onSubmit={handleSubmit}>
         <div>
-          <label>Username:</label>
+          <label>Name:</label>
           <input
             type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             required
           />
         </div>
@@ -75,4 +72,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default SignUp;

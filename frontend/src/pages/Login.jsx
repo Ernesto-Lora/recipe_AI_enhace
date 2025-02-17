@@ -13,8 +13,11 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("SUBMITING FORM");
     try {
+      console.log("TRYING TO LOGIN");
       const token = await login(email, password);
+      console.log(token);
       authLogin(token);
       navigate('/app'); // Redirect to the main app
     } catch (err) {

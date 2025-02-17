@@ -1,6 +1,6 @@
 // src/context/AuthContext.jsx
 import React, { createContext, useState, useEffect } from 'react';
-import { getToken, removeToken } from '../utils/auth';
+import { setToken, getToken, removeToken } from '../utils/auth';
 
 export const AuthContext = createContext();
 
