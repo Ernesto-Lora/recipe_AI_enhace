@@ -22,8 +22,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY', 'changeme')
-OPENAI_API_KEY = "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"
-
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(int(os.environ.get('DEBUG', 0)))

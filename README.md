@@ -1,22 +1,13 @@
-<div align="center">
-    <a href="https://londonappdeveloper.com" target="_blank">
-        <img src="https://londonappdeveloper.com/wp-content/uploads/2024/11/banner.svg" alt="Banner image" />
-    </a>
-</div>
+# Recipe AI Enhace
 
-<div align="center">
-    <p>Full-Stack Consulting and Courses.</p>
-    <a href="https://londonappdeveloper.com" target="_blank">Website</a> |
-    <a href="https://londonappdeveloper.teachable.com/" target="_blank">Courses</a> |
-    <a href="https://londonappdeveloper.com/tutorials/" target="_blank">Tutorials</a> |
-    <a href="https://londonappdeveloper.com/consulting/" target="_blank">Consulting
-</div>
+The app is able to create recipies for the calories requirements of each person. I have implements the registration and database for managing the recipes.
 
-<br /><br >
+![app ](app.png)
 
-# Recipe App API (v2) Source Code
+## ▶Installation and Running
 
-This is the code for the second edition of the course that was released in 2022.
+`git clone https://github.com/Ernesto-Lora/recipe_AI_enhace.git`
 
-Course code for: [Build a Backend REST API with Python &amp; Django - Advanced](https://londonapp.dev/c2)
+Build and run the app:
 
+`docker-compose run --build`
