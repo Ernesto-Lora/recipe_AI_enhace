@@ -21,7 +21,7 @@ RUN python -m venv /py && \
     /py/bin/pip install --upgrade pip && \
     apk add --no-cache \
     postgresql-client \
-    jpeg-dev && \  
+    jpeg-dev && \
     apk add --no-cache --virtual .tmp-build-deps \
     build-base \
     postgresql-dev \
@@ -35,10 +35,7 @@ RUN python -m venv /py && \
     fi && \
     rm -rf /tmp && \
     apk del .tmp-build-deps && \
-    adduser \
-    --disabled-password \
-    --no-create-home \
-    django-user && \
+    adduser -D -H django-user && \
     mkdir -p /vol/web/media && \
     mkdir -p /vol/web/static && \
     chown -R django-user:django-user /vol && \
