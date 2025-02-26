@@ -17,31 +17,20 @@ EXPOSE 8000
 ARG DEV=false
 
 # Install system dependencies and Python packages
-RUN python -m venv /py && \
-    /py/bin/pip install --upgrade pip && \
-    apk add --no-cache \
-    postgresql-client \
-    jpeg-dev && \
-    apk add --no-cache --virtual .tmp-build-deps \
-    build-base \
-    postgresql-dev \
-    musl-dev \
-    zlib \
-    zlib-dev \
-    linux-headers && \
-    /py/bin/pip install -r /tmp/requirements.txt && \
-    if [ "$DEV" = "true" ]; then \
-    /py/bin/pip install -r /tmp/requirements.dev.txt; \
-    fi && \
-    rm -rf /tmp && \
-    apk del .tmp-build-deps && \
-    adduser -D -H django-user && \
-    mkdir -p /vol/web/media && \
-    mkdir -p /vol/web/static && \
-    chown -R django-user:django-user /vol && \
-    chmod -R 755 /vol && \
-    chmod -R +x /scripts
-
+RUN python -m venv /py
+RUN /py/bin/pip install --upgrade pip
+RUN apk add --no-cache postgresql-client jpeg-dev
+RUN apk add --no-cache --virtual .tmp-build-deps build-base postgresql-dev musl-dev zlib zlib-dev linux-headers
+RUN /py/bin/pip install -r /tmp/requirements.txt
+RUN if [ "$DEV" = "true" ]; then /py/bin/pip install -r /tmp/requirements.dev.txt; fi
+RUN rm -rf /tmp
+RUN apk del .tmp-build-deps
+RUN adduser -D -H django-user
+RUN mkdir -p /vol/web/media
+RUN mkdir -p /vol/web/static
+RUN chown -R django-user:django-user /vol
+RUN chmod -R 755 /vol
+RUN chmod -R +x /scripts
 # Set environment path
 ENV PATH="/scripts:/py/bin:$PATH"
 
