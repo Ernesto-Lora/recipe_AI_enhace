@@ -21,8 +21,7 @@ RUN python -m venv /py && \
     /py/bin/pip install --upgrade pip && \
     apk add --no-cache \
     postgresql-client \
-    jpeg-dev \
-    libxcrypt-compat && \  
+    jpeg-dev && \  
     apk add --no-cache --virtual .tmp-build-deps \
     build-base \
     postgresql-dev \
@@ -36,6 +35,7 @@ RUN python -m venv /py && \
     fi && \
     rm -rf /tmp && \
     apk del .tmp-build-deps && \
+    adduser \
     --disabled-password \
     --no-create-home \
     django-user && \
@@ -53,4 +53,3 @@ USER django-user
 
 # Default command to run the application
 CMD ["run.sh"]
-
